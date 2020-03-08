@@ -26,7 +26,7 @@ sudo apt update && apt upgrade -y
 sudo apt install git -y
 
 # Install dependencies for flamegraph
-sudo apt install -y linux-tools-common linux-tools-generic
+sudo apt install -y linux-tools-common linux-tools-generic software-properties-common
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' rustup|grep "install ok installed")
 echo "Checking for rustup: ${PKG_OK}"
@@ -89,6 +89,15 @@ if [ "" == "$PKG_OK" ]; then
   mkdir -p ~/.config/nvim/
   cp shell/.vimrc ~/.config/nvim/init.vim
   cp shell/.vimrc ~/.vimrc
+
+  # Need to install nodejs (ugh) in order to get vim-coc working nicely
+  echo "Setting up nodejs as a pre-requisite for vim-coc plugin..."
+  sudo apt install -y nodejs
+
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  sudo apt update && sudo apt install yarn
+
   nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins
 fi
 
