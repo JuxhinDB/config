@@ -20,10 +20,10 @@
 # 
 
 # Update repositories (assuming source.list is valid/updated)
-apt update && apt upgrade -y
+sudo apt update && apt upgrade -y
 
 # Install essentially packages
-apt install git -y
+sudo apt install git -y
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' rustup|grep "install ok installed")
 echo "Checking for rustup: ${PKG_OK}"
@@ -42,9 +42,9 @@ if [ "" == "$PKG_OK" ]; then
   echo "No alacritty. Setting up alacritty."
 
   # Install alacritty terminal manager (https://github.com/alacritty/alacritty)
-  add-apt-repository "deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main"
-  apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
-  apt update && apt install alacritty -y
+  sudo add-apt-repository "deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main"
+  sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
+  sudo apt update && apt install alacritty -y
 
   # Setup config file symlink for alacritty
   mkdir -p ~/.config/alacritty
@@ -59,7 +59,24 @@ if [ "" == "$PKG_OK" ]; then
 
   echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_10/ /' > /etc/apt/sources.list.d/shells:fish:release:3.list
   wget -nv https://download.opensuse.org/repositories/shells:fish:release:3/Debian_10/Release.key -O Release.key
-  apt-key add - < Release.key
-  apt-get update && apt-get install -y fish
+  sudo apt-key add - < Release.key
+  sudo apt-get update && apt-get install -y fish
+fi
+
+
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' foo|grep "install ok installed")
+echo "Checking for neovim: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No neovim. Setting up neovim."
+
+  sudo apt install -y neovim 
+
+  # Setup Vim-Plug manager for NeoVim
+  curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+  mkdir -p ~/.config/nvim/
+  cp shell/.vimrc ~/.config/nvim/init.vim
+  nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins
 fi
 
