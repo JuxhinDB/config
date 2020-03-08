@@ -25,6 +25,9 @@ sudo apt update && apt upgrade -y
 # Install essentially packages
 sudo apt install git -y
 
+# Install dependencies for flamegraph
+sudo apt install -y linux-tools-common linux-tools-generic
+
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' rustup|grep "install ok installed")
 echo "Checking for rustup: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
@@ -34,6 +37,14 @@ if [ "" == "$PKG_OK" ]; then
   # Need to add Cargo to the PATH environment variable in order
   # to be able to add rustup in the namespace
   PATH=$PATH:~/.cargo/bin
+
+  # Setup nightly toolchain & install important Cargo components
+  rustup toolchain add nightly
+
+  cargo install flamegraph # Dependencies already install above 
+  
+  cargo +nightly install racer  
+  rustup component add rust-src
 fi
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' alacritty|grep "install ok installed")
@@ -77,6 +88,7 @@ if [ "" == "$PKG_OK" ]; then
 
   mkdir -p ~/.config/nvim/
   cp shell/.vimrc ~/.config/nvim/init.vim
+  cp shell/.vimrc ~/.vimrc
   nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins
 fi
 
