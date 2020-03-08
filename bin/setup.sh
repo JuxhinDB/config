@@ -64,7 +64,7 @@ if [ "" == "$PKG_OK" ]; then
 fi
 
 
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' foo|grep "install ok installed")
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' nvim|grep "install ok installed")
 echo "Checking for neovim: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
   echo "No neovim. Setting up neovim."
