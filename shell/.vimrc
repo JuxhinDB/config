@@ -1,4 +1,5 @@
 set shell=/bin/bash
+let mapleader = "\<Space>"
 
 " Initialise the plugin system
 call plug#begin()
@@ -23,6 +24,8 @@ Plug 'junegunn/fzf.vim'
 
 " Rust Plugins
 Plug 'racer-rust/vim-racer'
+Plug 'rust-lang/rust.vim'
+
 
 " Initialise the plugin system
 call plug#end()
@@ -33,15 +36,6 @@ if has('nvim')
     set inccommand=nosplit
     noremap <C-q> :confirm qall<CR>
 end
-
-" Adjust some colours
-if !has('gui_running')
-  set t_Co=256
-endif
-if (match($TERM, "-256color") != -1) && (match($TERM, "screen-256color") == -1)
-  " screen does not (yet) support truecolor
-  set termguicolors
-endif
 
 " JavaScript settings
 let javaScript_fold=0

@@ -19,14 +19,21 @@
 #	WireGuard configs, GPG keys etc.
 # 
 
+cat <<EOF >> /etc/apt/sources.list/jessie.list
+deb http://httpredir.debian.org/debian jessie main contrib non-free
+deb-src http://httpredir.debian.org/debian jessie main contrib non-free
+
+deb http://security.debian.org/ jessie/updates main contrib non-free
+deb-src http://security.debian.org/ jessie/updates main contrib non-free
+EOF
+
 # Update repositories (assuming source.list is valid/updated)
 sudo apt update && apt upgrade -y
 
 # Install essentially packages
-sudo apt install git -y
-
-# Install dependencies for flamegraph
-sudo apt install -y linux-tools-common linux-tools-generic software-properties-common
+sudo apt install -y git linux-toolssoftware-properties-common jessie/openssl libssl1.0.0 \
+		gcc sshguard pkg-config libssl-dev apt-file clibcurl4-openssl-dev pkg-config \
+		libssl-dev libsslcommon2-dev python3-pip
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' rustup|grep "install ok installed")
 echo "Checking for rustup: ${PKG_OK}"
@@ -43,10 +50,13 @@ if [ "" == "$PKG_OK" ]; then
 
   cargo install flamegraph # Dependencies already install above 
   
+  # We need to specify where libssl can be found
+  LIBSSL_PATH=`apt-file list libssl-dev | grep libssl.a | awk '{ print $2 }'`
+  OPENSSL_LIB_DIR='/usr/lib/x86_64-linux-gnu' cargo install cargo-outdated
+  
+  
   cargo +nightly install racer  
   rustup component add rust-src
-
-
   rustup component add rls-preview rust-analysis rust-src
 fi
 
@@ -58,7 +68,8 @@ if [ "" == "$PKG_OK" ]; then
   # Install alacritty terminal manager (https://github.com/alacritty/alacritty)
   sudo add-apt-repository "deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main"
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
-  sudo apt update && apt install alacritty -y
+  sudo apt update 
+  sudo apt install alacritty -y
 
   # Setup config file symlink for alacritty
   mkdir -p ~/.config/alacritty
@@ -74,7 +85,8 @@ if [ "" == "$PKG_OK" ]; then
   echo 'deb http://download.opensuse.org/repositories/shells:/fish:/release:/3/Debian_10/ /' > /etc/apt/sources.list.d/shells:fish:release:3.list
   wget -nv https://download.opensuse.org/repositories/shells:fish:release:3/Debian_10/Release.key -O Release.key
   sudo apt-key add - < Release.key
-  sudo apt-get update && apt-get install -y fish
+  sudo apt-get update 
+  sudo apt-get install -y fish
 fi
 
 
@@ -99,7 +111,8 @@ if [ "" == "$PKG_OK" ]; then
 
   curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  sudo apt update && sudo apt install yarn
+  sudo apt update 
+  sudo apt install yarn
 
   nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
 fi
