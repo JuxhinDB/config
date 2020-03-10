@@ -136,6 +136,7 @@ if [ "" == "$PKG_OK" ]; then
    stable"
 
   sudo apt update && sudo apt install -y docker-ce containerd.io
+  sudo pip3 install docker-compose
 fi
 
 
