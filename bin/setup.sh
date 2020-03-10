@@ -45,6 +45,9 @@ if [ "" == "$PKG_OK" ]; then
   
   cargo +nightly install racer  
   rustup component add rust-src
+
+
+  rustup component add rls-preview rust-analysis rust-src
 fi
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' alacritty|grep "install ok installed")
@@ -98,6 +101,24 @@ if [ "" == "$PKG_OK" ]; then
   echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   sudo apt update && sudo apt install yarn
 
-  nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins
+  nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
 fi
 
+# Download and Install Firefox Developer edition
+#pushd ~/Downloads
+#curl -fLo firefox-developer.tar.bz2 --create-dirs \
+#	https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-central/firefox-75.0a1.en-US.linux-x86_64.tar.bz2
+#tar -xvf firefox-developer.tar.bz2
+#
+#firefox_dir=$(which firefox)
+#mv $firefox_dir "${firefox_dir}.backup"
+#mv firefox /opt/
+#ln -s /opt/firefox/firefox $firefox_dir
+#
+#echo "[!] Currently not sure where to place your userChrome.css file..."
+#echo "    You may need to add it under ~/.mozilla/firefox/* and create "
+#echo "    a chrome/ directory to copy to"
+#popd
+
+# Setup fish config
+cp shell/config.fish ~/.config/fish/config.fish
