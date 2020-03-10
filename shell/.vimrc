@@ -26,6 +26,11 @@ Plug 'junegunn/fzf.vim'
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
 
+" Python Plugins
+Plug 'tmhedberg/SimplyFold'
+Plug 'nvie/vim-flake8'
+Plug 'vim-syntastic/syntastic'
+Plug 'vim-scripts/indentpython.vim'
 
 " Initialise the plugin system
 call plug#end()
@@ -58,6 +63,26 @@ nmap <leader>w :w<CR>
 " Toggle between previous/current buffers
 nnoremap <leader><leader> <c-^>
 
+" Setup split-pane navigation
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+" Python & PEP8 specific configuration
+syntax on
+let python_hight_all=1
+au BufNewFile,BufRead *.py
+    \ set tabstop=4
+    \ set softtabstop=4
+    \ set shiftwidth=4
+    \ set textwidth=79
+    \ set expandtab
+    \ set autoindent
+    \ set fileformat=unix
+
+au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.rs match BadWhitespace /\s\+$/
+
 " Racer & Rust
 " https://github.com/rust-lang/rust.vim/issues/192
 let g:rustfmt_autosave = 1
@@ -76,16 +101,22 @@ set updatetime=300
 set guioptions-=T " Remove toolbar
 set vb t_vb= " No more beeps
 set backspace=2 " Backspace over newlines
-set nofoldenable
 set ttyfast
 
-set relativenumber
+" Set word folding and allow unfolding via space
+set foldmethod=indent
+set foldlevel=99
+nnoremap <space> za
+
 set number
-set diffopt+=iwhite
-set diffopt+=algorithm:patience
-set diffopt+=indent-heuristic
 set showcmd
 set mouse=a
+set relativenumber
+set encoding=utf-8
+set diffopt+=iwhite
+set clipboard=unnamed
+set diffopt+=algorithm:patience
+set diffopt+=indent-heuristic
 set shortmess+=c " don't give |ins-completion-menu| messages.
 
 " Show those damn hidden characters
