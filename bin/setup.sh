@@ -117,6 +117,29 @@ if [ "" == "$PKG_OK" ]; then
   nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
 fi
 
+
+
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' docker|grep "install ok installed")
+echo "Checking for docker: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No docker. Setting up docker."
+
+  # Setup Docker Community Edition
+  # See: https://docs.docker.com/install/linux/docker-ce/debian/
+  sudo apt-get remove docker docker-engine docker.io containerd runc
+  sudo apt install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+
+  sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/debian \
+   $(lsb_release -cs) \
+   stable"
+
+  sudo apt update && sudo apt install -y docker-ce containerd.io
+fi
+
+
+
 # Download and Install Firefox Developer edition
 #pushd ~/Downloads
 #curl -fLo firefox-developer.tar.bz2 --create-dirs \
