@@ -137,6 +137,10 @@ if [ "" == "$PKG_OK" ]; then
 
   sudo apt update && sudo apt install -y docker-ce containerd.io
   sudo pip3 install docker-compose
+
+  sudo groupadd docker
+  sudo gpasswd -a $USER docker
+  sudo newgrp docker
 fi
 
 
