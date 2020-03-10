@@ -84,7 +84,6 @@ set number
 set diffopt+=iwhite
 set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
-set colorcolumn=80
 set showcmd
 set mouse=a
 set shortmess+=c " don't give |ins-completion-menu| messages.
