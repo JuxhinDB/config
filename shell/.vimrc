@@ -70,18 +70,17 @@ nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
 
 " Python & PEP8 specific configuration
-syntax on
-let python_hight_all=1
+let python_highlight_all=1
 au BufNewFile,BufRead *.py
-    \ set tabstop=4
-    \ set softtabstop=4
-    \ set shiftwidth=4
-    \ set textwidth=79
-    \ set expandtab
-    \ set autoindent
+    \ set tabstop=4       |
+    \ set softtabstop=4   |
+    \ set shiftwidth=4    |
+    \ set textwidth=119   |
+    \ set expandtab       |
+    \ set autoindent      | 
     \ set fileformat=unix
-
-au BufRead,BufNewFile *.py,*.pyw,*.c,*.h,*.rs match BadWhitespace /\s\+$/
+let g:syntastic_python_pyflakes_exe = 'python3 -m pyflakes'
+let g:syntastic_python_python_exec = '/usr/bin/python3'
 
 " Racer & Rust
 " https://github.com/rust-lang/rust.vim/issues/192

@@ -33,7 +33,7 @@ sudo apt update && apt upgrade -y
 # Install essentially packages
 sudo apt install -y git linux-toolssoftware-properties-common jessie/openssl libssl1.0.0 \
 		gcc sshguard pkg-config libssl-dev apt-file clibcurl4-openssl-dev pkg-config \
-		libssl-dev libsslcommon2-dev python3-pip
+		libssl-dev libsslcommon2-dev python3-pip resolvconf
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' rustup|grep "install ok installed")
 echo "Checking for rustup: ${PKG_OK}"
@@ -143,6 +143,15 @@ if [ "" == "$PKG_OK" ]; then
   sudo newgrp docker
 fi
 
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' kubectl|grep "install ok installed")
+echo "Checking for kubectl: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No kubectl. Setting up ."
+
+  sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+  sudo chmod +x kubectl
+  sudo mv kubectl /usr/local/bin/kubectl
+fi
 
 
 # Download and Install Firefox Developer edition
