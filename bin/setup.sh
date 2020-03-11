@@ -146,11 +146,30 @@ fi
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' kubectl|grep "install ok installed")
 echo "Checking for kubectl: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
-  echo "No kubectl. Setting up ."
+  echo "No kubectl. Setting up."
 
   sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
   sudo chmod +x kubectl
   sudo mv kubectl /usr/local/bin/kubectl
+fi
+
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' go|grep "install ok installed")
+echo "Checking for go: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No go. Setting up."
+
+  pushd ~/Downloads
+  wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
+  tar -xvf go1.13.3.linux-amd64.tar.gz
+
+  echo "Moving go to /usr/local/bin"
+  sudo mv go /usr/local
+  popd
+
+  # Setup go environment
+  export GOROOT=/usr/local/go
+  export GOPATH=$HOME/projects
+  export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 fi
 
 
