@@ -151,6 +151,8 @@ if [ "" == "$PKG_OK" ]; then
   sudo curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
   sudo chmod +x kubectl
   sudo mv kubectl /usr/local/bin/kubectl
+
+  mkdir -p ~/.kube/config
 fi
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' go|grep "install ok installed")
@@ -163,7 +165,7 @@ if [ "" == "$PKG_OK" ]; then
   tar -xvf go1.13.3.linux-amd64.tar.gz
 
   echo "Moving go to /usr/local/bin"
-  sudo mv go /usr/local
+  sudo rsync -a /usr/local/go go
   popd
 
   # Setup go environment
@@ -172,22 +174,19 @@ if [ "" == "$PKG_OK" ]; then
   export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
 fi
 
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' doctl|grep "install ok installed")
+echo "Checking for doctl: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No doctl. Setting up."
 
-# Download and Install Firefox Developer edition
-#pushd ~/Downloads
-#curl -fLo firefox-developer.tar.bz2 --create-dirs \
-#	https://download-installer.cdn.mozilla.net/pub/firefox/nightly/latest-mozilla-central/firefox-75.0a1.en-US.linux-x86_64.tar.bz2
-#tar -xvf firefox-developer.tar.bz2
-#
-#firefox_dir=$(which firefox)
-#mv $firefox_dir "${firefox_dir}.backup"
-#mv firefox /opt/
-#ln -s /opt/firefox/firefox $firefox_dir
-#
-#echo "[!] Currently not sure where to place your userChrome.css file..."
-#echo "    You may need to add it under ~/.mozilla/firefox/* and create "
-#echo "    a chrome/ directory to copy to"
-#popd
+  pushd ~/Downloads
+  curl -sL https://github.com/digitalocean/doctl/releases/download/v1.38.0/doctl-1.38.0-linux-amd64.tar.gz | tar -xzv
+  sudo mv doctl /usr/local/bin/doctl
+  sudo chmod +x /usr/local/bin/doctl
+  popd
 
-# Setup fish config
+fi
+
+# Copy configs over
+cp shell/.bashrc ~/.bashrc
 cp shell/config.fish ~/.config/fish/config.fish
