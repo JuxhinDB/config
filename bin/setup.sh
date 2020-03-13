@@ -152,7 +152,7 @@ if [ "" == "$PKG_OK" ]; then
   sudo chmod +x kubectl
   sudo mv kubectl /usr/local/bin/kubectl
 
-  mkdir -p ~/.kube/config
+  mkdir -p ~/.kube
 fi
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' go|grep "install ok installed")
