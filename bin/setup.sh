@@ -187,6 +187,23 @@ if [ "" == "$PKG_OK" ]; then
 
 fi
 
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' pyflame|grep "install ok installed")
+echo "Checking for pyflame: ${PKG_OK}"
+if [ "" == "$PKG_OK" ]; then
+  echo "No pyflame. Setting up."
+
+  sudo apt install -y autoconf automake autotools-dev g++ pkg-config python-dev python3-dev libtool make
+
+  pushd ~/Downloads
+  curl -sL https://github.com/uber-archive/pyflame/archive/v1.6.7.tar.gz | tar -xzv
+  cd pyflame-1.6.7
+  ./autogen.sh
+  ./configure
+  make
+  sudo mv src/pyflame /usr/local/bin
+  popd
+fi
+
 # Copy configs over
 cp shell/.bashrc ~/.bashrc
 cp shell/config.fish ~/.config/fish/config.fish
