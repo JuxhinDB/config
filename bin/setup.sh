@@ -58,6 +58,7 @@ if [ "" == "$PKG_OK" ]; then
   cargo +nightly install racer  
   rustup component add rust-src
   rustup component add rls-preview rust-analysis rust-src
+  rustup component add clippy
 fi
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' alacritty|grep "install ok installed")
@@ -187,22 +188,14 @@ if [ "" == "$PKG_OK" ]; then
 
 fi
 
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' pyflame|grep "install ok installed")
-echo "Checking for pyflame: ${PKG_OK}"
+PKG_OK=$(dpkg-query -W --showformat='${Status}\n' py-spy|grep "install ok installed")
+echo "Checking for py-spt: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
-  echo "No pyflame. Setting up."
+  echo "No py-spy. Setting up."
 
-  sudo apt install -y autoconf automake autotools-dev g++ pkg-config python-dev python3-dev libtool make
-
-  pushd ~/Downloads
-  curl -sL https://github.com/uber-archive/pyflame/archive/v1.6.7.tar.gz | tar -xzv
-  cd pyflame-1.6.7
-  ./autogen.sh
-  ./configure
-  make
-  sudo mv src/pyflame /usr/local/bin
-  popd
+  sudo pip3 install py-spy
 fi
+
 
 # Copy configs over
 cp shell/.bashrc ~/.bashrc

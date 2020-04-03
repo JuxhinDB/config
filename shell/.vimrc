@@ -118,6 +118,9 @@ set diffopt+=algorithm:patience
 set diffopt+=indent-heuristic
 set shortmess+=c " don't give |ins-completion-menu| messages.
 
+" Ignore certain files and directories when performing fuzzy searches
+set wildignore+=*.zip,*.png,*.jpg,*.gif,*.pdf,*DS_Store*,*/.git/*,*/node_modules/*,*/build/*,package-lock.json,target/debug/*
+
 " Show those damn hidden characters
 " Verbose: set listchars=nbsp:¬,eol:¶,extends:»,precedes:«,trail:•
 set listchars=nbsp:¬,extends:»,precedes:«,trail:•
