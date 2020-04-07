@@ -70,11 +70,12 @@ if [ "" == "$PKG_OK" ]; then
   sudo add-apt-repository "deb http://ppa.launchpad.net/mmstick76/alacritty/ubuntu bionic main"
   sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 5B7FC40A404FAD98548806028AC9B4BBBAB4900B
   sudo apt update 
-  sudo apt install alacritty -y
+  sudo apt install -y tmux alacritty
 
   # Setup config file symlink for alacritty
   mkdir -p ~/.config/alacritty
   cp ../shell/alacritty.yaml ~/.config/alacritty/alacritty.yaml
+  cp ../shell/.tmux.conf ~/.tmux.conf
 fi
 
 
