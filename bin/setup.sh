@@ -78,7 +78,6 @@ if [ "" == "$PKG_OK" ]; then
   cp ../shell/.tmux.conf ~/.tmux.conf
 fi
 
-
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' fish|grep "install ok installed")
 echo "Checking for fish: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
@@ -90,7 +89,6 @@ if [ "" == "$PKG_OK" ]; then
   sudo apt-get update 
   sudo apt-get install -y fish
 fi
-
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' nvim|grep "install ok installed")
 echo "Checking for neovim: ${PKG_OK}"
@@ -118,8 +116,6 @@ if [ "" == "$PKG_OK" ]; then
 
   nvim +PlugInstall +PlugClean +PlugUpdate +UpdateRemotePlugins +qall
 fi
-
-
 
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' docker|grep "install ok installed")
 echo "Checking for docker: ${PKG_OK}"
@@ -157,25 +153,6 @@ if [ "" == "$PKG_OK" ]; then
   mkdir -p ~/.kube
 fi
 
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' go|grep "install ok installed")
-echo "Checking for go: ${PKG_OK}"
-if [ "" == "$PKG_OK" ]; then
-  echo "No go. Setting up."
-
-  pushd ~/Downloads
-  wget https://dl.google.com/go/go1.13.3.linux-amd64.tar.gz
-  tar -xvf go1.13.3.linux-amd64.tar.gz
-
-  echo "Moving go to /usr/local/bin"
-  sudo rsync -a /usr/local/go go
-  popd
-
-  # Setup go environment
-  export GOROOT=/usr/local/go
-  export GOPATH=$HOME/projects
-  export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-fi
-
 PKG_OK=$(dpkg-query -W --showformat='${Status}\n' doctl|grep "install ok installed")
 echo "Checking for doctl: ${PKG_OK}"
 if [ "" == "$PKG_OK" ]; then
@@ -200,4 +177,6 @@ fi
 
 # Copy configs over
 cp shell/.bashrc ~/.bashrc
-cp shell/config.fish ~/.config/fish/config.fish
+cp shell/.zshrc ~/.zshrc
+cp shell/.tmux.conf ~/.tmux.conf
+cp shell/init.vim ~/.config/nvim/init.vim
